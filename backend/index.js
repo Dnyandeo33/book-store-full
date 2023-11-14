@@ -1,11 +1,14 @@
-import express from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
+import express from 'express';
+
+import bookRoutes from './routes/book.js';
+import userRoutes from './routes/user.js';
 
 // configure dotenv
 dotenv.config();
-const PORT = process.env.PORT || 3009;
+const PORT = process.env.PORT || '8000';
 
 // initialize express
 const app = express();
@@ -24,6 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // use routes
+app.use(userRoutes);
+app.use(bookRoutes);
 
 // handle 404
 app.use('*', (req, res) => {

@@ -1,8 +1,10 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import dotenv from 'dotenv';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 
+import { DataTypes, Sequelize } from 'sequelize';
+import createBook from './book.js';
+import createUser from './user.js';
 
 // construct path
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +20,7 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: 'mysql',
-        operatorsAliases: false,
+        // operatorsAliases: false,
         dialectOptions: {
             socketPath: '/tmp/mysql.sock'
         },
@@ -45,12 +47,21 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-
+db.users = createUser(sequelize, DataTypes);
+db.books = createBook(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
     console.log('yes re-sync done!');
 });
 
+db.users.hasMany(db.books, {
+    foreignKey: 'user_id',
+    as: 'book'
+});
 
+db.books.belongsTo(db.users, {
+    foreignKey: 'user_id',
+    as: 'user'
+});
 
 export default db;

@@ -1,0 +1,12 @@
+# post
+# POST http://localhost:5002/register;
+
+# post request
+
+POST https://localhost:3000/login
+content-type: application/json
+
+{
+    "email": "dnyanu@gmail.com",
+    "password": "Dnyanu33!"
+}
